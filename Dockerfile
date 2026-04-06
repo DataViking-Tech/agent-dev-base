@@ -134,18 +134,11 @@ RUN set -eux; \
     node --version; npm --version
 
 # 6b. Claude Code — native installer (standalone, no Node.js dependency)
-#     The installer places the binary at ~/.local/bin/claude and supporting
-#     files at ~/.local/share/claude. We move the binary to /usr/local/bin
-#     so it is available to all users, and copy the share directory to a
-#     global location.
+#     Installed to /usr/local via npm since the native installer places files
+#     in ~/.local which is root-only during build. npm global install puts
+#     the binary in /usr/local/bin where all users can access it.
 RUN set -eux; \
-    curl -fsSL https://claude.ai/install.sh | bash; \
-    if [ -f /root/.local/bin/claude ]; then \
-        mv /root/.local/bin/claude /usr/local/bin/claude; \
-    fi; \
-    if [ -d /root/.local/share/claude ]; then \
-        mv /root/.local/share/claude /usr/local/share/claude; \
-    fi; \
+    npm install -g @anthropic-ai/claude-code; \
     claude --version
 
 # 6c. Codex CLI (OpenAI) — installed via npm (Rust binary, Node wrapper)
@@ -155,13 +148,14 @@ RUN set -eux; \
 
 # 6d. Amp CLI (Sourcegraph) — standalone binary via install script
 #     The installer places the binary at ~/.local/bin/amp. We move it to
-#     /usr/local/bin so it is available to all users.
+#     /usr/local/bin so it is available to all users. Use full path for
+#     verification since ~/.local/bin may not be in PATH.
 RUN set -eux; \
     curl -fsSL https://ampcode.com/install.sh | bash; \
     if [ -f /root/.local/bin/amp ]; then \
         mv /root/.local/bin/amp /usr/local/bin/amp; \
     fi; \
-    amp --version
+    /usr/local/bin/amp --version
 
 # ---------------------------------------------------------------------------
 # 7. User setup — devuser (UID 1000, GID 1000)
