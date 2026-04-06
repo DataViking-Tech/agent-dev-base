@@ -92,7 +92,19 @@ RUN set -eux; \
 #
 # Release archive: beads_<V>_linux_{amd64,arm64}.tar.gz
 # Checksums:       checksums.txt in the release
+#
+# Note: bd is dynamically linked against ICU 74 (libicui18n.so.74).
+# Debian bookworm ships ICU 72. We install libicu-dev from trixie (testing)
+# to provide the required shared libraries, then remove the trixie source.
 # ---------------------------------------------------------------------------
+RUN set -eux; \
+    echo "deb http://deb.debian.org/debian trixie main" > /etc/apt/sources.list.d/trixie.list; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends -t trixie libicu74; \
+    rm /etc/apt/sources.list.d/trixie.list; \
+    apt-get update; \
+    rm -rf /var/lib/apt/lists/*
+
 RUN set -eux; \
     ARCH="${TARGETARCH:-amd64}"; \
     TARBALL="beads_${BD_VERSION}_linux_${ARCH}.tar.gz"; \
