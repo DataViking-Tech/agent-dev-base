@@ -63,6 +63,9 @@ jobs:
       - name: "Test: lsof is available"
         run: docker run --rm agent-dev-base:test which lsof
 
+      - name: "Test: gh is available"
+        run: docker run --rm agent-dev-base:test gh --version
+
       - name: "Test: claude is available"
         run: docker run --rm agent-dev-base:test claude --version
 
