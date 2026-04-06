@@ -1,0 +1,40 @@
+name: Test Image
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t ai-dev-base:test .
+
+      - name: Verify orchestration tools
+        run: |
+          docker run --rm ai-dev-base:test gc version
+          docker run --rm ai-dev-base:test bd version
+          docker run --rm ai-dev-base:test dolt version
+
+      - name: Verify system tools
+        run: |
+          docker run --rm ai-dev-base:test git --version
+          docker run --rm ai-dev-base:test tmux -V
+          docker run --rm ai-dev-base:test jq --version
+          docker run --rm ai-dev-base:test gh --version
+
+      - name: Verify user setup
+        run: |
+          docker run --rm ai-dev-base:test id
+          docker run --rm ai-dev-base:test bash -c 'test "$(id -u)" = "1000"'
+          docker run --rm ai-dev-base:test bash -c 'sudo echo "sudo works"'
+
+      - name: Verify no root processes needed
+        run: |
+          docker run --rm ai-dev-base:test bash -c 'whoami && test "$(whoami)" = "vscode"'
