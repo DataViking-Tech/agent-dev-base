@@ -45,6 +45,7 @@ RUN apt-get update \
         make \
         wget \
         unzip \
+        libicu74 \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------------
