@@ -55,7 +55,7 @@ jobs:
             # Always: sha-based for traceability
             type=sha,prefix=sha-
           labels: |
-            org.opencontainers.image.title=ai-dev-base
+            org.opencontainers.image.title=agent-dev-base
             org.opencontainers.image.description=Lightweight base image for AI agent development with Gas City orchestration
             org.opencontainers.image.licenses=MIT
 

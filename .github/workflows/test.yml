@@ -31,78 +31,78 @@ jobs:
           context: .
           platforms: ${{ matrix.platform }}
           load: true
-          tags: ai-dev-base:test
+          tags: agent-dev-base:test
 
       # -------------------------------------------------------------------
       # E.1 Binary smoke tests
       # -------------------------------------------------------------------
       - name: "Test: gc is executable"
-        run: docker run --rm ai-dev-base:test gc version
+        run: docker run --rm agent-dev-base:test gc version
 
       - name: "Test: bd is executable"
-        run: docker run --rm ai-dev-base:test bd version
+        run: docker run --rm agent-dev-base:test bd version
 
       - name: "Test: dolt is executable"
-        run: docker run --rm ai-dev-base:test dolt version
+        run: docker run --rm agent-dev-base:test dolt version
 
       - name: "Test: git is available"
-        run: docker run --rm ai-dev-base:test git --version
+        run: docker run --rm agent-dev-base:test git --version
 
       - name: "Test: tmux is available"
-        run: docker run --rm ai-dev-base:test tmux -V
+        run: docker run --rm agent-dev-base:test tmux -V
 
       - name: "Test: jq is available"
-        run: docker run --rm ai-dev-base:test jq --version
+        run: docker run --rm agent-dev-base:test jq --version
 
       - name: "Test: flock is available"
-        run: docker run --rm ai-dev-base:test flock --version
+        run: docker run --rm agent-dev-base:test flock --version
 
       - name: "Test: pgrep is available"
-        run: docker run --rm ai-dev-base:test pgrep -V
+        run: docker run --rm agent-dev-base:test pgrep -V
 
       - name: "Test: lsof is available"
-        run: docker run --rm ai-dev-base:test which lsof
+        run: docker run --rm agent-dev-base:test which lsof
 
       - name: "Test: claude is available"
-        run: docker run --rm ai-dev-base:test claude --version
+        run: docker run --rm agent-dev-base:test claude --version
 
       - name: "Test: codex is available"
-        run: docker run --rm ai-dev-base:test codex --version
+        run: docker run --rm agent-dev-base:test codex --version
 
       - name: "Test: amp is available"
-        run: docker run --rm ai-dev-base:test amp --version
+        run: docker run --rm agent-dev-base:test amp --version
 
       # -------------------------------------------------------------------
       # E.2 User and environment tests
       # -------------------------------------------------------------------
       - name: "Test: running as devuser"
         run: |
-          result=$(docker run --rm ai-dev-base:test whoami)
+          result=$(docker run --rm agent-dev-base:test whoami)
           echo "whoami: $result"
           [ "$result" = "devuser" ]
 
       - name: "Test: UID is 1000"
         run: |
-          result=$(docker run --rm ai-dev-base:test id -u)
+          result=$(docker run --rm agent-dev-base:test id -u)
           echo "uid: $result"
           [ "$result" = "1000" ]
 
       - name: "Test: locale is UTF-8"
         run: |
-          docker run --rm ai-dev-base:test locale | grep -q "en_US.UTF-8"
+          docker run --rm agent-dev-base:test locale | grep -q "en_US.UTF-8"
 
       - name: "Test: sudo works"
         run: |
-          result=$(docker run --rm ai-dev-base:test sudo id)
+          result=$(docker run --rm agent-dev-base:test sudo id)
           echo "sudo id: $result"
           echo "$result" | grep -q "uid=0"
 
       - name: "Test: /workspaces exists"
-        run: docker run --rm ai-dev-base:test test -d /workspaces
+        run: docker run --rm agent-dev-base:test test -d /workspaces
 
       - name: "Test: /workspaces owned by devuser"
         run: |
-          result=$(docker run --rm ai-dev-base:test stat -c '%U' /workspaces)
+          result=$(docker run --rm agent-dev-base:test stat -c '%U' /workspaces)
           echo "owner: $result"
           [ "$result" = "devuser" ]
 
@@ -117,7 +117,7 @@ jobs:
           elif [ "${{ matrix.platform }}" = "linux/arm64" ]; then
             expected_arch="aarch64"
           fi
-          result=$(docker run --rm ai-dev-base:test uname -m)
+          result=$(docker run --rm agent-dev-base:test uname -m)
           echo "uname -m: $result (expected: $expected_arch)"
           [ "$result" = "$expected_arch" ]
 
@@ -129,7 +129,7 @@ jobs:
       # -------------------------------------------------------------------
       - name: "Test: image size under 1500 MB"
         run: |
-          size_bytes=$(docker image inspect ai-dev-base:test --format '{{.Size}}')
+          size_bytes=$(docker image inspect agent-dev-base:test --format '{{.Size}}')
           size_mb=$((size_bytes / 1024 / 1024))
           echo "Image size: ${size_mb} MB (${size_bytes} bytes)"
           if [ "$size_mb" -gt 1500 ]; then

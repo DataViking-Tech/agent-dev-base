@@ -1,4 +1,4 @@
-# ai-dev-base: Lightweight base image for AI agent development
+# agent-dev-base: Lightweight base image for AI agent development
 #
 # Bundles Gas City (gc) orchestration, Beads (bd) issue tracking,
 # Dolt database, and AI coding CLIs on Ubuntu Noble.
@@ -8,9 +8,9 @@
 # bookworm (ICU 72) does not provide.
 #
 # Build:
-#   docker build --platform linux/amd64 -t ai-dev-base .
+#   docker build --platform linux/amd64 -t agent-dev-base .
 # Multi-arch:
-#   docker buildx build --platform linux/amd64,linux/arm64 -t ai-dev-base .
+#   docker buildx build --platform linux/amd64,linux/arm64 -t agent-dev-base .
 
 FROM ubuntu:noble
 
@@ -182,9 +182,9 @@ WORKDIR /workspaces
 ENV SHELL=/bin/bash
 
 # OCI image labels
-LABEL org.opencontainers.image.source="https://github.com/dataviking-tech/ai-dev-base"
+LABEL org.opencontainers.image.source="https://github.com/dataviking-tech/agent-dev-base"
 LABEL org.opencontainers.image.description="Lightweight base image for AI agent development with Gas City orchestration, Beads issue tracking, and AI coding CLIs"
 LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.title="ai-dev-base"
+LABEL org.opencontainers.image.title="agent-dev-base"
 
 CMD ["bash"]

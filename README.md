@@ -1,4 +1,4 @@
-# ai-dev-base
+# agent-dev-base
 
 Lightweight base image for AI agent development containers. Built on Debian
 bookworm-slim for `linux/amd64` and `linux/arm64`. Published to GitHub Container
@@ -86,14 +86,14 @@ This is a **base image**. The following belong in downstream images:
 ### Pull from GHCR
 
 ```bash
-docker pull ghcr.io/dataviking-tech/ai-dev-base:latest
-docker run -it ghcr.io/dataviking-tech/ai-dev-base:latest
+docker pull ghcr.io/dataviking-tech/agent-dev-base:latest
+docker run -it ghcr.io/dataviking-tech/agent-dev-base:latest
 ```
 
 ### Extend in a downstream Dockerfile
 
 ```dockerfile
-FROM ghcr.io/dataviking-tech/ai-dev-base:latest
+FROM ghcr.io/dataviking-tech/agent-dev-base:latest
 
 # Add your language runtime
 RUN sudo apt-get update && sudo apt-get install -y python3 python3-pip \
@@ -104,7 +104,7 @@ RUN sudo apt-get update && sudo apt-get install -y python3 python3-pip \
 
 ```json
 {
-  "image": "ghcr.io/dataviking-tech/ai-dev-base:latest"
+  "image": "ghcr.io/dataviking-tech/agent-dev-base:latest"
 }
 ```
 
@@ -129,17 +129,17 @@ docker build \
   --build-arg GC_VERSION=0.14.0 \
   --build-arg BD_VERSION=1.1.0 \
   --build-arg DOLT_VERSION=1.86.0 \
-  -t ai-dev-base .
+  -t agent-dev-base .
 ```
 
 ## Building locally
 
 ```bash
 # Single architecture
-docker build --platform linux/amd64 -t ai-dev-base .
+docker build --platform linux/amd64 -t agent-dev-base .
 
 # Multi-architecture
-docker buildx build --platform linux/amd64,linux/arm64 -t ai-dev-base .
+docker buildx build --platform linux/amd64,linux/arm64 -t agent-dev-base .
 ```
 
 ## Checksum verification
