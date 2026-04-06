@@ -46,6 +46,7 @@ RUN apt-get update \
         wget \
         unzip \
         libicu74 \
+        systemd \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------------------
