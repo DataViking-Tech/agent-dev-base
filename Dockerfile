@@ -1,14 +1,18 @@
 # ai-dev-base: Lightweight base image for AI agent development
 #
 # Bundles Gas City (gc) orchestration, Beads (bd) issue tracking,
-# Dolt database, and AI coding CLIs on Debian bookworm-slim.
+# Dolt database, and AI coding CLIs on Ubuntu Noble.
+#
+# Ubuntu Noble (24.04 LTS) chosen over Debian bookworm because the
+# prebuilt beads binary requires ICU 74+ (libicui18n.so.74), which
+# bookworm (ICU 72) does not provide.
 #
 # Build:
 #   docker build --platform linux/amd64 -t ai-dev-base .
 # Multi-arch:
 #   docker buildx build --platform linux/amd64,linux/arm64 -t ai-dev-base .
 
-FROM debian:bookworm-slim
+FROM ubuntu:noble
 
 # ---------------------------------------------------------------------------
 # Build arguments — version pins for orchestration tools
@@ -23,6 +27,7 @@ ARG TARGETARCH
 # ---------------------------------------------------------------------------
 # 1. System packages (single layer, cache cleaned)
 # ---------------------------------------------------------------------------
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         bash \
@@ -93,18 +98,7 @@ RUN set -eux; \
 # Release archive: beads_<V>_linux_{amd64,arm64}.tar.gz
 # Checksums:       checksums.txt in the release
 #
-# Note: bd is dynamically linked against ICU 74 (libicui18n.so.74).
-# Debian bookworm ships ICU 72. We install libicu-dev from trixie (testing)
-# to provide the required shared libraries, then remove the trixie source.
 # ---------------------------------------------------------------------------
-RUN set -eux; \
-    echo "deb http://deb.debian.org/debian trixie main" > /etc/apt/sources.list.d/trixie.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends -t trixie libicu74; \
-    rm /etc/apt/sources.list.d/trixie.list; \
-    apt-get update; \
-    rm -rf /var/lib/apt/lists/*
-
 RUN set -eux; \
     ARCH="${TARGETARCH:-amd64}"; \
     TARBALL="beads_${BD_VERSION}_linux_${ARCH}.tar.gz"; \
