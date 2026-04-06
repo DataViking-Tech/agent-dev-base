@@ -160,7 +160,11 @@ RUN set -eux; \
 # ---------------------------------------------------------------------------
 # 7. User setup — devuser (UID 1000, GID 1000)
 # ---------------------------------------------------------------------------
-RUN groupadd --gid 1000 devuser \
+# Ubuntu noble may already have a user/group with UID/GID 1000 (e.g. ubuntu).
+# Remove any existing user/group first, then create devuser cleanly.
+RUN (getent group 1000 | cut -d: -f1 | xargs -r groupdel || true) \
+    && (getent passwd 1000 | cut -d: -f1 | xargs -r userdel -r || true) \
+    && groupadd --gid 1000 devuser \
     && useradd --uid 1000 --gid devuser --shell /bin/bash --create-home devuser \
     && echo "devuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/devuser \
     && chmod 0440 /etc/sudoers.d/devuser
